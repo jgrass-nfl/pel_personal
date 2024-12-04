@@ -161,7 +161,7 @@ export class PlayQuizMode extends GameMode
     });
   }
   async addCurrentActiveStreams() {
-    const { data: matchVideoStreams, errors } = await this.pelClient.dbClient.models.MatchVideoStream.list({
+    const { data: matchVideoStreams } = await this.pelClient.dbClient.models.MatchVideoStream.list({
       filter: {
         streamState: { eq: "active" },
       }
