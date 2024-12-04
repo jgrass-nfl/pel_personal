@@ -1,10 +1,5 @@
 
 type defLabelFn = (dyObj: any) => string;
-type deferRevalFn = () => void;
-
-interface deferObj {
-  addDeferred: (reFn: deferRevalFn) => void;
-}
 
 export class Uib {
   static buildDiv(className: string, ...internalNodes: (string | HTMLElement)[]) {

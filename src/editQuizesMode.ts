@@ -91,8 +91,7 @@ export class EditQuizesMode extends GameMode
     }
     const {
       data: quizList,
-      nextQuizPage, // Repeat this API call with the nextToken until the returned nextToken is `null`
-      errors
+      nextQuizPage // Repeat this API call with the nextToken until the returned nextToken is `null`
     } = await this.pelClient.dbClient.models.Quiz.list({
       limit: 10,
       nextToken: nextQuizPageToken
@@ -167,7 +166,7 @@ export class EditQuizesMode extends GameMode
     this.currentQuizId = curQuiz.id;
     this.questionDeleteList = [];
 
-    const { data: quizQuestions, errors } = await this.pelClient.dbClient.models.Question.list({
+    const { data: quizQuestions } = await this.pelClient.dbClient.models.Question.list({
       filter: {
         quizId : { eq: this.currentQuizId }
       }
@@ -243,13 +242,13 @@ export class EditQuizesMode extends GameMode
 
   async createUpdateQuiz() {
     if (this.currentQuizId == null) {
-      const { errors, data: newQuiz } = await this.pelClient.dbClient.models.Quiz.create({
+      const { data: newQuiz } = await this.pelClient.dbClient.models.Quiz.create({
         title: this.quizNameInput.value,
       });
 
       console.log("Write Quiz " + newQuiz.id);
     } else {
-      const { errors, data: newQuiz } = await this.pelClient.dbClient.models.Quiz.update({
+      const { data: newQuiz } = await this.pelClient.dbClient.models.Quiz.update({
         id: this.currentQuizId,
         title: this.quizNameInput.value,
       });
@@ -265,7 +264,7 @@ export class EditQuizesMode extends GameMode
     }
     // Remove the delete question list
     for (let questionID in this.questionDeleteList) {
-      const { data: deleteQuestion, errors } = await this.pelClient.dbClient.models.Question.delete({
+      const { data: deleteQuestion } = await this.pelClient.dbClient.models.Question.delete({
         id: questionID,
       });
       console.log("Deleted question " + deleteQuestion.id);
@@ -276,7 +275,7 @@ export class EditQuizesMode extends GameMode
   }
   async createUpdateQuestion(inQuizId: string, inOrderInd: number, quizQuestionUI: QuizQuestionUI) {
     if (quizQuestionUI.questionDBId != null) {
-      const { errors, data: newQuestion } = await this.pelClient.dbClient.models.Question.update({
+      const { data: newQuestion } = await this.pelClient.dbClient.models.Question.update({
         id: quizQuestionUI.questionDBId,
         quizId: inQuizId,
         orderInd: inOrderInd,
@@ -290,7 +289,7 @@ export class EditQuizesMode extends GameMode
 
       console.log("Update question " + newQuestion.id);
     } else {
-      const { errors, data: newQuestion } = await this.pelClient.dbClient.models.Question.create({
+      const { data: newQuestion } = await this.pelClient.dbClient.models.Question.create({
         quizId: inQuizId,
         orderInd: inOrderInd,
         prompt: quizQuestionUI.question.value,
@@ -324,7 +323,7 @@ export class EditQuizesMode extends GameMode
     for (let ind = 0; ind < this.questionUIList.length; ++ind) {
       let questionUI = this.questionUIList[ind];
       if (questionUI.questionDBId != null) {
-        const { data: deleteQuestion, errors } = await this.pelClient.dbClient.models.Question.delete({
+        const { data: deleteQuestion } = await this.pelClient.dbClient.models.Question.delete({
             id: questionUI.questionDBId,
           });
           console.log("Deleted question " + deleteQuestion.id);
@@ -332,7 +331,7 @@ export class EditQuizesMode extends GameMode
     }
     // Delete the quiz
     if (this.currentQuizId != null) {
-      const { data: deleteQuiz, errors } = await this.pelClient.dbClient.models.Quiz.delete({
+      const { data: deleteQuiz } = await this.pelClient.dbClient.models.Quiz.delete({
         id: this.currentQuizId,
       });
       console.log("Deleted question " + deleteQuiz.id);

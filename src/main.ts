@@ -15,6 +15,7 @@ function pelClientStart() {
   webTick(0);
 }
 
+// @ts-ignore
 function webTick(time: DOMHighResTimeStamp) {
 	pelClient.update();
   window.requestAnimationFrame(webTick);

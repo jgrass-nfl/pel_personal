@@ -68,7 +68,7 @@ const c_end_stage_id = 2000;
 
 const c_num_pre_stages = 2;
 
-const c_default_answer_time = 3.0;
+// const c_default_answer_time = 3.0;
 const c_answer_buffer_ms = 500;
 
 
@@ -175,7 +175,6 @@ export class HostMatchMode extends GameMode
     const {
       data: matchList,
       nextMatchPage,
-      errors
     } = await this.pelClient.dbClient.models.Match.listByStart({
       matchState: "open",
       limit: 10,

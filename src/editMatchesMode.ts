@@ -95,7 +95,6 @@ export class EditMatchesMode extends GameMode
     const {
       data: matchList,
       nextMatchPage,
-      errors
     } = await this.pelClient.dbClient.models.Match.listByStart({
       matchState: "open",
       limit: 10,
@@ -151,7 +150,6 @@ export class EditMatchesMode extends GameMode
     const {
       data: quizList,
       nextQuizPage, // Repeat this API call with the nextToken until the returned nextToken is `null`
-      errors
     } = await this.pelClient.dbClient.models.Quiz.list({
       limit: 10,
       nextToken: nextQuizPageToken
@@ -234,7 +232,7 @@ export class EditMatchesMode extends GameMode
     }
     answerTime = Math.floor(answerTime * 1000);
 
-    const { errors, data: newMatch } = await this.pelClient.dbClient.models.Match.create({
+    const { data: newMatch } = await this.pelClient.dbClient.models.Match.create({
       matchState: "open",
       name: this.matchNameInput.value,
       start: curTimeString,
@@ -251,7 +249,7 @@ export class EditMatchesMode extends GameMode
     this.currentMatch = this.matchList[ind];
 
     // Get the quiz for the name
-    const { data: curQuiz, errors } = await this.pelClient.dbClient.models.Quiz.get({
+    const { data: curQuiz } = await this.pelClient.dbClient.models.Quiz.get({
       id: this.currentMatch.quizId
     });
 
@@ -324,7 +322,7 @@ export class EditMatchesMode extends GameMode
     }
     answerTime = Math.floor(answerTime * 1000);
 
-    const { errors, data: newMatch } = await this.pelClient.dbClient.models.Match.update({
+    const { data: newMatch } = await this.pelClient.dbClient.models.Match.update({
       id: this.currentMatch.id,
       name: this.matchNameInput.value,
       start: curTimeString,
@@ -338,7 +336,7 @@ export class EditMatchesMode extends GameMode
   }
   async deleteMatch() {
     let matchId = this.currentMatch.id;
-    const { data: deleteMatch, errors } = await this.pelClient.dbClient.models.Match.delete({
+    const { data: deleteMatch } = await this.pelClient.dbClient.models.Match.delete({
       id: matchId,
     });
     console.log("Deleted match " + deleteMatch.name);
