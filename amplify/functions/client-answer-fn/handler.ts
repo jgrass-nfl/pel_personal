@@ -1,11 +1,11 @@
 import type { Schema } from "../../data/resource"
 import { generateClient } from "aws-amplify/data";
 import { Amplify } from 'aws-amplify';
-import outputs from '../../../amplify_outputs.json';
+//import outputs from '../../../amplify_outputs.json';
 
-Amplify.configure(outputs);
+//Amplify.configure(outputs);   // Comment to get running
 
-const client = generateClient<Schema>();
+//const client = generateClient<Schema>();       // Comment to get running
 
 export const handler: Schema["clientAnswerFn"]["functionHandler"] = async (event) => {
   // arguments typed from `.arguments()`
@@ -15,6 +15,8 @@ export const handler: Schema["clientAnswerFn"]["functionHandler"] = async (event
   // required datetime that wasn't passed in would be filled in with the current time.  Which would do what we need.
   let curTime = new Date();
   let curTimeString = curTime.toISOString();
+
+/*       // Comment to get running
 
   const { data: matchPlayerResponse, errors: matchPlayerResponseErrors } =
       await client.models.MatchPlayerResponse.create({
@@ -33,6 +35,10 @@ export const handler: Schema["clientAnswerFn"]["functionHandler"] = async (event
   }
 
   return "matchPlayerResponse (" + matchPlayerResponse.answer + ") " + curTimeString;
+  
+  */
+  
+  return "fail for now";
 }
 
 /* working 
