@@ -17,11 +17,11 @@ main {
 
 @font-face {
   font-family: MontserratBlack;
-  src: url("assets/fonts/Montserrat-Black.ttf");
+  src: url("/public/assets/fonts/Montserrat-Black.ttf");
 }
 @font-face {
   font-family: Roboto;
-  src: url("assets/fonts/Roboto-Medium.ttf");
+  src: url("/public/assets/fonts/Roboto-Medium.ttf");
 }
 .login_region {
   display: block;
