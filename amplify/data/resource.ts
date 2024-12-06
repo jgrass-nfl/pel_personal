@@ -84,8 +84,8 @@ const schema = a.schema({
     answer: a.integer(),
     responseTime: a.datetime(),
   })
-  .authorization(allow => [allow.publicApiKey()]),
-});
+  .authorization(allow => [allow.publicApiKey()])
+}).authorization(allow => [allow.resource(clientAnswerFn)]);
 
 export type Schema = ClientSchema<typeof schema>;
 

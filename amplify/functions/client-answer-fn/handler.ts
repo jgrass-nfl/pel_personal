@@ -1,11 +1,47 @@
 import type { Schema } from "../../data/resource"
 import { generateClient } from "aws-amplify/data";
 import { Amplify } from 'aws-amplify';
+import { env } from "$amplify/env/client-answer-fn";
+import { createMatchPlayerResponse } from "../../graphql/mutations";
+
 //import outputs from '../../../amplify_outputs.json';
 
 //Amplify.configure(outputs);   // Comment to get running
 
 //const client = generateClient<Schema>();       // Comment to get running
+
+Amplify.configure(
+  {
+    API: {
+      GraphQL: {
+        endpoint: env.AMPLIFY_DATA_GRAPHQL_ENDPOINT,
+        region: env.AWS_REGION,
+        defaultAuthMode: "iam",
+      },
+    },
+  },
+  {
+    Auth: {
+      credentialsProvider: {
+        getCredentialsAndIdentityId: async () => ({
+          credentials: {
+            accessKeyId: env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+            sessionToken: env.AWS_SESSION_TOKEN,
+          },
+        }),
+        clearCredentialsAndIdentityId: () => {
+          /* noop */
+        },
+      },
+    },
+  }
+);
+
+const client = generateClient<Schema>({
+  authMode: "iam",
+});
+
 
 export const handler: Schema["clientAnswerFn"]["functionHandler"] = async (event) => {
   // arguments typed from `.arguments()`
@@ -15,6 +51,29 @@ export const handler: Schema["clientAnswerFn"]["functionHandler"] = async (event
   // required datetime that wasn't passed in would be filled in with the current time.  Which would do what we need.
   let curTime = new Date();
   let curTimeString = curTime.toISOString();
+
+  const { data: matchPlayerResponse, errors: matchPlayerResponseErrors } =
+  await client.graphql({
+    query: createMatchPlayerResponse,
+    variables: {
+      input: {
+        matchId: matchId,
+        matchPlayInstanceId: matchPlayInstanceId,
+        questionIndex: questionIndex,
+        answer: answer,
+        responseTime: curTimeString,
+      },
+    },
+  });
+
+  if (matchPlayerResponseErrors != null) {
+    return "Error " + matchPlayerResponseErrors[0].message;
+  }
+  if (matchPlayerResponse == null) {
+    return "No matchPlayerResponse";
+  }
+
+  return "matchPlayerResponse (" + matchPlayerResponse.createMatchPlayerResponse.answer + ") " + curTimeString;
 
 /*       // Comment to get running
 
@@ -38,7 +97,7 @@ export const handler: Schema["clientAnswerFn"]["functionHandler"] = async (event
   
   */
   
-  return "fail for now";
+  // return "fail for now";
 }
 
 /* working 
