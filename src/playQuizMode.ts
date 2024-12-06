@@ -332,9 +332,17 @@ export class PlayQuizMode extends GameMode
       this.answerButtons[0].style.backgroundColor = "#0ebf35";
       return;
     }
-    // This needs to use an amplify function so the timestamp can't be spoofed.  ALTHOUGH, there was a hint that a
-    // required datetime that wasn't passed in would be filled in with the current time.  Which would do what we need.
+    
     let callTime = new Date();
+
+    this.playerAnswer = selectedAnswer;
+    // Lock and color the buttons
+    for (let ind = 0; ind < this.answerButtons.length; ++ind) {
+      this.answerButtons[ind].disabled = true;
+      if (ind != selectedAnswer) {       
+        this.answerButtons[ind].style.backgroundColor = "#d3d3d3";
+      }
+    }
 
     const { errors, data: result } =
         await this.pelClient.dbClient.queries.clientAnswerFn({
@@ -350,15 +358,6 @@ export class PlayQuizMode extends GameMode
 
     let responseTime = returnTime.getTime() - callTime.getTime();
     console.log("responseTime: " + responseTime);
-
-    this.playerAnswer = selectedAnswer;
-    // Lock and color the buttons
-    for (let ind = 0; ind < this.answerButtons.length; ++ind) {
-      this.answerButtons[ind].disabled = true;
-      if (ind != selectedAnswer) {       
-        this.answerButtons[ind].style.backgroundColor = "#d3d3d3";
-      }
-    }
   }
   onAnswerFromHost(matchAnswer: any) {
     this.matchAnswerQueue.push(matchAnswer);
